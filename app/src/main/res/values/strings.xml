@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">ZyFrame</string>
+    <string name="placeholder">占位符</string>
+
+
+    <!--错误信息-->
+    <string name="emptyData">暂无数据</string>
+    <string name="networkError">请检查网络连接</string>
+    <string name="timeoutError">网络请求超时,请稍后重试！</string>
+    <string name="connectError">无法连接到服务器！</string>
+    <string name="retry">重试</string>
+
+    <!--Dialog-->
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+
+    <!--设置-->
+    <string name="complete">完成</string>
+    <string name="clearComplete">清理完成!</string>
+
+    <string name="dialogDownload">正在下载… </string>
+
+    <!--gallery-->
+    <string name="all_image">全部图片</string>
+    <string name="all_video">全部视频</string>
+    <string name="video">视频</string>
+    <string name="default_duration">00:00</string>
+    <string name="select">选择</string>
+    <string name="maxSizeHint">你最多只能选择%s个图片或者视频</string>
+
+    <!--camera-->
+    <string name="camera_hint">轻触拍照，长按摄像</string>
+</resources>

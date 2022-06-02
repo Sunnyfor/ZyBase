@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!--外部存储空间根目录-->
+    <external-files-path
+        name="temp"
+        path="temp" />
+
+    <external-files-path
+        name="Pictures"
+        path="Pictures" />
+
+    <external-files-path
+        name="Movies"
+        path="Movies" />
+</paths>
