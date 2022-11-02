@@ -1,0 +1,55 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
+}
+
+
+apply from: 'https://gitee.com/sunnyfor/GradleConfig/raw/master/config.gradle'
+
+android {
+    compileSdkVersion project.ext.android.compileSdkVersion
+
+    defaultConfig {
+        minSdk project.ext.android.minSdkVersion
+        targetSdk project.ext.android.targetSdkVersion
+        versionCode 1
+        versionName version
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation project.ext.dependencies.coreKtx
+    implementation project.ext.dependencies.appcompat
+    implementation project.ext.dependencies.constraintLayout
+    //Kotlin协程库
+    implementation project.ext.dependencies.coroutines
+    //Glide支持库
+    implementation project.ext.dependencies.glide
+    implementation project.ext.dependencies.recyclerView
+    implementation 'com.github.Sunnyfor:ZyKit:1.0.3'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.Sunnyfor'
+                artifactId = 'ZyBase'
+                version = '1.0.0'
+            }
+        }
+    }
+}

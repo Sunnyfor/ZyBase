@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="ibBack" type="id" />
+    <item name="tvTitle" type="id" />
+    <item name="menuView" type="id" />
+
+    <item name="zy_fl_toolbar" type="id" />
+    <item name="zy_fl_body" type="id" />
+    <item name="zy_ib_back" type="id" />
+    <item name="zy_tv_title" type="id" />
+    <item name="zy_menu_view" type="id" />
+</resources>

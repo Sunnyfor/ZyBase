@@ -1,0 +1,26 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="ZyTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionMenuTextAppearance">@style/ZyMenuStyle</item>
+        <item name="actionMenuTextColor">@color/textColorPrimary</item>
+    </style>
+
+    <style name="ZyToolbarStyle" parent="android:Widget.Material.Toolbar"/>
+
+<!--    <style name="ZyToolbarSize"-->
+
+    <style name="ZyTitleStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+
+    <style name="ZyMenuStyle">
+        <item name="android:textSize">@dimen/dp_14</item>
+    </style>
+
+    <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item>
+    </style>
+</resources>
