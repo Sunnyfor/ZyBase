@@ -8,10 +8,10 @@ import android.widget.FrameLayout
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import com.sunny.kit.listener.OnClickIntervalListener
-import com.sunny.zy.config.ZyBaseConfig
 import com.sunny.zy.base.bean.ErrorViewBean
-import com.sunny.zy.base.bean.MenuBean
+import com.sunny.zy.config.ZyBaseConfig
 import com.sunny.zy.widget.DefaultStateView
+import com.sunny.zy.widget.ZyToolBar
 
 
 /**
@@ -24,9 +24,8 @@ abstract class BaseFragment : Fragment(), IBaseView, View.OnClickListener, OnTit
 
     private var savedInstanceState: Bundle? = null
 
-    val toolbar: ZyToolBar?
+    val toolbar: ZyToolBar
         get() = getBaseActivity().toolbar
-
 
     private val flParentView by lazy {
         FrameLayout(requireContext())
@@ -116,62 +115,17 @@ abstract class BaseFragment : Fragment(), IBaseView, View.OnClickListener, OnTit
     }
 
 
-    override fun hideTitle() {
-        getBaseActivity().hideTitle()
+
+    fun setStatusBarTextModel(isDark: Boolean) {
+        getBaseActivity().setStatusBarModel(isDark)
     }
 
-    override fun showTitle() {
-        getBaseActivity().showTitle()
+    fun showStatusBar() {
+        getBaseActivity().showStatusBar()
     }
 
-    /**
-     * 只有标题的toolbar
-     */
-    override fun setTitleSimple(title: String, vararg menuItem: MenuBean) {
-        getBaseActivity().setTitleSimple(title, *menuItem)
-    }
-
-    override fun setTitleCenterSimple(title: String, vararg menuItem: MenuBean) {
-        getBaseActivity().setTitleCenterSimple(title, *menuItem)
-    }
-
-    /**
-     * 带返回键的toolbar
-     */
-    override fun setTitleDefault(title: String, vararg menuItem: MenuBean) {
-        getBaseActivity().setTitleDefault(title, *menuItem)
-    }
-
-    override fun setTitleCenterDefault(title: String, vararg menuItem: MenuBean) {
-        getBaseActivity().setTitleCenterDefault(title, *menuItem)
-    }
-
-    override fun setTitleCustom(layoutRes: Int, vararg menuItem: MenuBean) {
-        getBaseActivity().setTitleCustom(layoutRes, *menuItem)
-    }
-
-    override fun setTitleBackground(textColor: Int, backgroundColor: Int) {
-        getBaseActivity().setTitleBackground(textColor, backgroundColor)
-    }
-
-    override fun setStatusBarColor(color: Int) {
-        getBaseActivity().setStatusBarColor(color)
-    }
-
-    override fun setStatusBarDrawable(drawable: Int, relevantView: View?) {
-        getBaseActivity().setStatusBarDrawable(drawable, relevantView)
-    }
-
-    override fun setStatusBarTextModel(isDark: Boolean) {
-        getBaseActivity().setStatusBarTextModel(isDark)
-    }
-
-    override fun showStatusBar(showText: Boolean?) {
-        getBaseActivity().showStatusBar(showText)
-    }
-
-    override fun hideStatusBar(showText: Boolean?) {
-        getBaseActivity().hideStatusBar(showText)
+    fun hideStatusBar() {
+        getBaseActivity().hideStatusBar()
     }
 
     fun <T : View> findViewById(@IdRes id: Int): T {

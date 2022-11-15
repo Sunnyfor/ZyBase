@@ -1,12 +1,9 @@
 package com.sunny.zy.utils
 
-import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout.LayoutParams
-import com.sunny.zy.R
 import com.sunny.zy.base.BaseActivity
 import com.sunny.zy.base.bean.MenuBean
-import com.sunny.zy.base.ZyToolBar
 
 
 /**
@@ -17,7 +14,7 @@ import com.sunny.zy.base.ZyToolBar
  */
 class ToolbarUtil(var activity: BaseActivity) {
 
-    var toolbar: ZyToolBar? = null
+//    var toolbar: ZyToolBar? = null
 
     private val menuList = ArrayList<MenuBean>()
 
@@ -29,12 +26,12 @@ class ToolbarUtil(var activity: BaseActivity) {
             LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT
         )
 
-        if (toolbar != null) {
-            rootLayout.removeView(toolbar)
-        }
-        toolbar = ZyToolBar(rootLayout.context ?: return, layoutRes)
-        rootLayout.addView(toolbar, 1, layoutParams)
-        activity.setSupportActionBar(toolbar)
+//        if (toolbar != null) {
+//            rootLayout.removeView(toolbar)
+//        }
+//        toolbar = ZyToolBar(rootLayout.context ?: return, layoutRes)
+//        rootLayout.addView(toolbar, 1, layoutParams)
+//        activity.setSupportActionBar(toolbar)
     }
 
 
@@ -42,10 +39,10 @@ class ToolbarUtil(var activity: BaseActivity) {
         show()
         menuList.clear()
         menuList.addAll(menuItem)
-        toolbar?.visibility = View.VISIBLE
-        toolbar?.title = title
-        toolbar?.navigationIcon = null
-        toolbar?.setNavigationOnClickListener(null)
+//        toolbar?.visibility = View.VISIBLE
+//        toolbar?.title = title
+//        toolbar?.navigationIcon = null
+//        toolbar?.setNavigationOnClickListener(null)
     }
 
 
@@ -53,11 +50,11 @@ class ToolbarUtil(var activity: BaseActivity) {
         show()
         menuList.clear()
         menuList.addAll(menuItem)
-        toolbar?.title = title
-        toolbar?.setNavigationIcon(R.drawable.svg_title_back)
-        toolbar?.setNavigationOnClickListener {
-            activity.finish()
-        }
+//        toolbar?.title = title
+//        toolbar?.setNavigationIcon(R.drawable.svg_title_back)
+//        toolbar?.setNavigationOnClickListener {
+//            activity.finish()
+//        }
     }
 
     fun setTitleCustom(vararg menuItem: MenuBean) {
@@ -68,14 +65,14 @@ class ToolbarUtil(var activity: BaseActivity) {
 
 
     fun hide() {
-        toolbar?.visibility = View.GONE
+//        toolbar?.visibility = View.GONE
     }
 
     fun show() {
-        toolbar?.visibility = View.VISIBLE
+//        toolbar?.visibility = View.VISIBLE
     }
 
     fun createMenu() {
-        toolbar?.createMenu(menuList)
+//        toolbar?.createMenu(menuList)
     }
 }

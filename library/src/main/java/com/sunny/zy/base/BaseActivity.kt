@@ -2,34 +2,28 @@ package com.sunny.zy.base
 
 import android.content.Context
 import android.content.pm.ActivityInfo
-import android.graphics.drawable.BitmapDrawable
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
-import android.widget.LinearLayout
-import androidx.annotation.ColorRes
+import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.FitWindowsLinearLayout
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.sunny.kit.listener.OnClickIntervalListener
 import com.sunny.kit.utils.DensityUtil
 import com.sunny.kit.utils.PermissionsUtil
 import com.sunny.zy.R
-import com.sunny.zy.config.ZyBaseConfig
 import com.sunny.zy.base.bean.ErrorViewBean
-import com.sunny.zy.base.bean.MenuBean
 import com.sunny.zy.base.manager.ZyActivityManager
-import com.sunny.zy.utils.BitmapUtil
-import com.sunny.zy.utils.ToolbarUtil
+import com.sunny.zy.config.ZyBaseConfig
 import com.sunny.zy.widget.DefaultStateView
+import com.sunny.zy.widget.ZyToolBar
 
 
 /**
@@ -39,7 +33,7 @@ import com.sunny.zy.widget.DefaultStateView
  * Date 2018/8/2
  */
 abstract class BaseActivity : AppCompatActivity(),
-    ActivityCompat.OnRequestPermissionsResultCallback, IBaseView, OnTitleListener,
+    ActivityCompat.OnRequestPermissionsResultCallback, IBaseView,
     View.OnClickListener {
 
     open var taskTag = "DefaultActivity"
@@ -48,18 +42,10 @@ abstract class BaseActivity : AppCompatActivity(),
 
     private var isDark = false
 
-    private var mStatusBarColor: Int = 0
+    private var mStatusBarColor: Int = R.color.colorPrimary
 
     private val permissionsUtil: PermissionsUtil by lazy {
         PermissionsUtil(1100)
-    }
-
-    private val toolbarUtil: ToolbarUtil by lazy {
-        ToolbarUtil(this)
-    }
-
-    private val bitmapUtil: BitmapUtil by lazy {
-        BitmapUtil()
     }
 
     //限制点击间隔
@@ -71,18 +57,27 @@ abstract class BaseActivity : AppCompatActivity(),
         }
     }
 
-    open val toolbar: ZyToolBar?
-        get() = toolbarUtil.toolbar
+    private val ivTopBg by lazy {
+        findViewById<ImageView>(R.id.ivTopBg)
+    }
+
+    open val toolbar: ZyToolBar by lazy {
+        findViewById(R.id.zyToolBar)
+    }
 
 
     open val statusBar: View by lazy {
-        View(this)
+        findViewById(R.id.vStatusBar)
+    }
+
+    open val parentView: FrameLayout by lazy {
+        findViewById(R.id.flContent)
     }
 
     open val defaultStateView: DefaultStateView by lazy {
         object : DefaultStateView(ZyBaseConfig.createStateView) {
             override fun getStateViewParent(): ViewGroup {
-                return this@BaseActivity.getStateViewParent()
+                return parentView
             }
         }
     }
@@ -95,31 +90,26 @@ abstract class BaseActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         this.savedInstanceState = savedInstanceState
         requestedOrientation = screenOrientation //强制屏幕
-
-        val statusBarParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            DensityUtil.getStatusBarHeight()
-        )
-        getFitWindowsLinearLayout().addView(statusBar, 0, statusBarParams)
-        mStatusBarColor = R.color.colorPrimary
-        setStatusBarColor(mStatusBarColor)
-        setStatusBarTextModel(ZyBaseConfig.statusBarIsDark)
+        setContentView(R.layout.zy_activity_base)
+        statusBar.setBackgroundResource(mStatusBarColor)
+        statusBar.layoutParams.height = DensityUtil.getStatusBarHeight()
 
         when (val layoutView = initLayout()) {
             is Int -> {
                 if (layoutView != 0) {
-                    setContentView(layoutView)
+                    parentView.addView(layoutInflater.inflate(layoutView, parentView, false))
                 }
             }
             is View -> {
-                setContentView(layoutView)
+                parentView.addView(layoutView)
             }
 
             is Fragment -> {
                 supportFragmentManager.beginTransaction()
-                    .add(android.R.id.content, layoutView).commit()
+                    .add(parentView.id, layoutView).commit()
             }
         }
+        setStatusBarModel(false)
         ZyActivityManager.addActivity(this)
         initView()
         loadData()
@@ -134,7 +124,6 @@ abstract class BaseActivity : AppCompatActivity(),
 
     override fun onDestroy() {
         ZyActivityManager.removeActivity(this)
-        bitmapUtil.destroy()
         onClose()
         super.onDestroy()
     }
@@ -190,115 +179,30 @@ abstract class BaseActivity : AppCompatActivity(),
         onClickIntervalListener.onClick(view)
     }
 
-    override fun hideTitle() {
-        toolbarUtil.hide()
-    }
-
-    override fun showTitle() {
-        toolbarUtil.show()
-    }
-
-    fun getFitWindowsLinearLayout(): FitWindowsLinearLayout =
-        findViewById(androidx.appcompat.R.id.action_bar_root)
-
     /**
-     * 只有标题的toolbar
+     * 设置沉浸式背景
      */
-    override fun setTitleSimple(title: String, vararg menuItem: MenuBean) {
-        toolbarUtil.initToolbar(getFitWindowsLinearLayout())
-        toolbarUtil.titleSimple(title, *menuItem)
-    }
-
-    override fun setTitleCenterSimple(title: String, vararg menuItem: MenuBean) {
-        toolbarUtil.initToolbar(getFitWindowsLinearLayout(), R.layout.zy_default_title)
-        toolbarUtil.titleSimple(title, *menuItem)
+    fun setImmersionBg(@DrawableRes drawable: Int, height: Int = 0) {
+        immersionBgSetting(height)
+        ivTopBg.setImageResource(drawable)
     }
 
     /**
-     * 带返回键的toolbar
+     * 设置沉浸式背景
      */
-    override fun setTitleDefault(title: String, vararg menuItem: MenuBean) {
-        toolbarUtil.initToolbar(getFitWindowsLinearLayout())
-        toolbarUtil.titleDefault(title, *menuItem)
+    fun setImmersionBg(bitmap: Bitmap, height: Int = 0) {
+        immersionBgSetting(height)
+        ivTopBg.setImageBitmap(bitmap)
     }
 
-    override fun setTitleCenterDefault(title: String, vararg menuItem: MenuBean) {
-        toolbarUtil.initToolbar(getFitWindowsLinearLayout(), R.layout.zy_default_title)
-        toolbarUtil.titleDefault(title, *menuItem)
-    }
-
-    override fun setTitleCustom(layoutRes: Int, vararg menuItem: MenuBean) {
-        toolbarUtil.initToolbar(getFitWindowsLinearLayout(), layoutRes)
-        toolbarUtil.setTitleCustom(*menuItem)
-    }
-
-    override fun setTitleBackground(textColor: Int, backgroundColor: Int) {
-        if (backgroundColor != 0) {
-            toolbar?.setBackgroundResource(backgroundColor)
-            setStatusBarColor(backgroundColor)
-        }
-        if (textColor != 0) {
-            toolbar?.setTitleTextColor(ContextCompat.getColor(this, textColor))
-        }
-    }
-
-    override fun setStatusBarColor(@ColorRes color: Int) {
-        mStatusBarColor = color
-        statusBar.setBackgroundResource(color)
-    }
-
-    override fun setStatusBarDrawable(@DrawableRes drawable: Int, relevantView: View?) {
-        mStatusBarColor = drawable
-        val width = DensityUtil.screenWidth()
-        val statusBarHeight = DensityUtil.getStatusBarHeight()
-        var toolbarHeight = 0
-        if (toolbar != null) {
-            toolbarHeight = DensityUtil.getToolBarHeight()
-        }
-
-        if (relevantView == null) {
-            bitmapUtil.initBitmap(drawable, width, statusBarHeight + toolbarHeight)
-            setStatusBarDrawable(width, statusBarHeight)
-            setToolBarDrawable(width, statusBarHeight, toolbarHeight)
+    private fun immersionBgSetting(height: Int) {
+        statusBar.setBackgroundResource(android.R.color.transparent)
+        toolbar.setBackgroundResource(android.R.color.transparent)
+        if (height == 0) {
+            ivTopBg.layoutParams.height =
+                ZyBaseConfig.toolBarHeight + DensityUtil.getStatusBarHeight()
         } else {
-            relevantView.post {
-
-                val viewHeight = relevantView.height
-                if (viewHeight < 1) {
-                    throw IllegalArgumentException("relevantView的高度不能小于1")
-                }
-
-                bitmapUtil.initBitmap(
-                    drawable, width, statusBarHeight + toolbarHeight + viewHeight
-                )
-                setStatusBarDrawable(width, statusBarHeight)
-                setToolBarDrawable(width, statusBarHeight, toolbarHeight)
-                val relevantViewBitmap =
-                    bitmapUtil.getCroppedBitmap(
-                        0, statusBarHeight + toolbarHeight,
-                        width,
-                        viewHeight
-                    )
-                relevantView.background = (BitmapDrawable(resources, relevantViewBitmap))
-            }
-        }
-    }
-
-    private fun setStatusBarDrawable(width: Int, statusBarHeight: Int) {
-        val statusBarBitmap = bitmapUtil.getCroppedBitmap(0, 0, width, statusBarHeight)
-        statusBar.background = (BitmapDrawable(resources, statusBarBitmap))
-    }
-
-    private fun setToolBarDrawable(width: Int, statusBarHeight: Int, toolbarHeight: Int) {
-        if (toolbar != null) {
-            val toolBarBitmap =
-                bitmapUtil.getCroppedBitmap(
-                    0,
-                    statusBarHeight,
-                    width,
-                    toolbarHeight
-                )
-            toolbarUtil.toolbar?.background = (BitmapDrawable(resources, toolBarBitmap))
+            ivTopBg.layoutParams.height = height
         }
     }
 
@@ -307,7 +211,7 @@ abstract class BaseActivity : AppCompatActivity(),
      *  @param isDark true为黑色 false为白色
      */
     @Suppress("DEPRECATION")
-    override fun setStatusBarTextModel(isDark: Boolean) {
+    fun setStatusBarModel(isDark: Boolean) {
         this.isDark = isDark
         window.decorView.systemUiVisibility = if (isDark) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -322,25 +226,14 @@ abstract class BaseActivity : AppCompatActivity(),
         }
     }
 
-    @Suppress("DEPRECATION")
-    override fun showStatusBar(showText: Boolean?) {
-        if (showText == true) {
-            setStatusBarTextModel(isDark)
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
+
+    fun showStatusBar() {
         statusBar.visibility = View.VISIBLE
     }
 
-
-    override fun hideStatusBar(showText: Boolean?) {
-        showStatusBar(showText)
+    fun hideStatusBar() {
         statusBar.visibility = View.GONE
     }
-
 
     /**
      * 隐藏输入法键盘
@@ -358,11 +251,6 @@ abstract class BaseActivity : AppCompatActivity(),
      */
     open fun onFragmentLoadFinish(fragment: Fragment) {}
 
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        toolbarUtil.createMenu()
-        return super.onCreateOptionsMenu(menu)
-    }
 
     /**
      * 请求动态多权限

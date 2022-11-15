@@ -1,6 +1,10 @@
 package com.sunny.zy.base.bean
 
-import android.view.MenuItem
+import android.view.View
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import com.sunny.kit.ZyKit
+import com.sunny.zy.R
 
 /**
  * Desc
@@ -11,39 +15,75 @@ import android.view.MenuItem
 class MenuBean {
 
     companion object {
-        //表示永远显示在菜单中
-        const val NEVER = MenuItem.SHOW_AS_ACTION_NEVER
+        //
+        const val SHOW_TYPE_TEXT = 1
+        const val SHOW_TYPE_ICON = 2
+        const val SHOW_TYPE_ALL = 0
 
-        //表示如果空间充足就显示在Toolbar，否则显示在菜单中
-        const val IF_ROOM = MenuItem.SHOW_AS_ACTION_IF_ROOM
+        //排列方式
+        const val HORIZONTAL = 0
+        const val VERTICAL = 1
 
-        //表示永远显示在Toolbar中，如果屏幕空间不够则不显示
-        const val ALWAYS = MenuItem.SHOW_AS_ACTION_ALWAYS
+        //全局设置 文字与图标之间的间隔
+        var TEXT_MARGIN: Int = ZyKit.getContext().resources.getDimensionPixelSize(R.dimen.dp_4)
 
-        //这个值使菜单和它的图标，菜单文本一起显示
-        const val WITH_TEXT = MenuItem.SHOW_AS_ACTION_WITH_TEXT
+        //全局设置 菜单之间的间隔
+        var INTERVAL: Int = ZyKit.getContext().resources.getDimensionPixelSize(R.dimen.dp_6)
     }
 
 
-    constructor(title: String?, onClickListener: () -> Unit) {
-        this.title = title ?: ""
-        this.onClickListener = onClickListener
-    }
+    constructor()
 
-
-    constructor(icon: Int, onClickListener: () -> Unit) {
-        this.icon = icon
-        this.onClickListener = onClickListener
-    }
-
-    constructor(title: String?, icon: Int, onClickListener: () -> Unit) {
-        this.title = title ?: ""
+    constructor(title: String, icon: Int, onClickListener: View.OnClickListener?) {
+        this.title = title
         this.icon = icon
         this.onClickListener = onClickListener
     }
 
     var title: String = ""
+
+    @DrawableRes
     var icon: Int = 0
-    var showAsAction = ALWAYS
-    var onClickListener: () -> Unit
+
+    /**
+     * 图片宽度
+     */
+    var iconWidth = 0
+
+    /***
+     *  图标高度
+     */
+    var iconHeight = 0
+
+    /**
+     * 显示模式（只显示文字、只显示图标、显示所有）
+     */
+    var showType = SHOW_TYPE_ALL
+
+    /**
+     * 文字颜色
+     */
+    @ColorInt
+    var titleColor: Int = 0
+
+    /**
+     * 文字大小
+     */
+    var textSize = 0F
+
+    /**
+     * 文字与图标之间的间隔（仅所有模式下生效）
+     */
+    var textMargin = 0
+
+    /**
+     * 菜单之间的间隔
+     */
+    var interval = 0
+
+    /**
+     * 图文排列方向
+     */
+    var orientation = HORIZONTAL
+    var onClickListener: View.OnClickListener? = null
 }

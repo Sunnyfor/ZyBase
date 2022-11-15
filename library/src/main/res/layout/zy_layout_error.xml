@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/placeholder"
-        android:scaleType="fitXY"
+        android:scaleType="matrix"
         android:src="@drawable/svg_placeholder" />
 
     <TextView
