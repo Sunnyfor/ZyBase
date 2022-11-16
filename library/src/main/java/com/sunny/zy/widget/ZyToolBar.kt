@@ -2,7 +2,6 @@ package com.sunny.zy.widget
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -21,7 +20,7 @@ class ZyToolBar : FrameLayout, OnTitleListener {
     private var defaultRes = R.layout.zy_default_title
     private var layoutRes = 0
     private var titleView: View? = null
-
+    var toolbarHeight = 0 //设置标题栏高度
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -31,31 +30,24 @@ class ZyToolBar : FrameLayout, OnTitleListener {
         defStyleAttr
     )
 
-    init {
-        setBackgroundResource(R.color.colorPrimary)
-    }
-
     fun <T> getView(@IdRes id: Int): T? {
         return titleView?.findViewById(id)
     }
 
-    fun setTitleSize(px: Float) {
-        getView<TextView>(R.id.tvTitle)?.setTextSize(TypedValue.COMPLEX_UNIT_PX, px)
-    }
-
+    fun getTitle(): TextView? = getView<TextView>(R.id.tvTitle)
 
     fun setBackTitle(
         @DrawableRes backIcon: Int,
         backText: String,
         title: String,
-        rightMenu: List<MenuBean>
+        rightMenu: List<MenuBean> = arrayListOf()
     ) {
         val backMenuBean = MenuBean(backText, backIcon) {
             if (context is Activity) {
                 (context as Activity).finish()
             }
         }
-        backMenuBean.textSize = resources.getDimension(R.dimen.dp_16)
+        backMenuBean.textSize = resources.getDimension(R.dimen.dp_15)
         backMenuBean.showType = MenuBean.SHOW_TYPE_ALL
         backMenuBean.orientation = MenuBean.HORIZONTAL
         setTitle(arrayListOf(backMenuBean), title, rightMenu)
@@ -73,7 +65,10 @@ class ZyToolBar : FrameLayout, OnTitleListener {
             }
         }
         getView<ZyMenuView>(R.id.zvRight)?.setMenu(rightMenu)
-        val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, ZyBaseConfig.toolBarHeight)
+        if (toolbarHeight == 0) {
+            toolbarHeight = ZyBaseConfig.toolBarHeight
+        }
+        val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, toolbarHeight)
         addView(titleView, layoutParams)
     }
 
@@ -81,7 +76,42 @@ class ZyToolBar : FrameLayout, OnTitleListener {
     private fun initTitleView() {
         removeAllViews()
         titleView = LayoutInflater.from(context).inflate(layoutRes, this, false)
-        titleView?.setPadding(ZyBaseConfig.toolbarPadding, 0, ZyBaseConfig.toolbarPadding, 0)
+        setPadding(ZyBaseConfig.toolbarPadding, ZyBaseConfig.toolbarPadding)
+    }
+
+
+    fun setLeftPadding(left: Int) {
+        titleView?.let {
+            setPadding(left, it.paddingTop, it.paddingRight, it.paddingBottom)
+        }
+    }
+
+    fun setRightPadding(right: Int) {
+        titleView?.let {
+            setPadding(it.paddingLeft, it.paddingTop, right, it.paddingBottom)
+        }
+    }
+
+    fun setTopPadding(top: Int) {
+        titleView?.let {
+            setPadding(it.paddingStart, top, it.paddingRight, it.paddingBottom)
+        }
+    }
+
+    fun setBottomPadding(bottom: Int) {
+        titleView?.let {
+            setPadding(it.paddingStart, it.paddingTop, it.paddingRight, bottom)
+        }
+    }
+
+    fun setPadding(left: Int, right: Int) {
+        titleView?.let {
+            setPadding(left, it.paddingTop, right, it.paddingBottom)
+        }
+    }
+
+    override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
+        titleView?.setPadding(left, top, right, bottom)
     }
 
     override fun showTitle() {
@@ -98,7 +128,7 @@ class ZyToolBar : FrameLayout, OnTitleListener {
     }
 
     override fun setTitleCenterSimple(title: String, vararg menuItem: MenuBean) {
-        setBackTitle(R.drawable.svg_title_back, "返回", title, menuItem.toMutableList())
+        setBackTitle(R.drawable.svg_title_back, "", title, menuItem.toMutableList())
         centerTitle()
     }
 
@@ -131,7 +161,7 @@ class ZyToolBar : FrameLayout, OnTitleListener {
         addView(titleView)
     }
 
-    private fun leftTitle() {
+    fun leftTitle() {
         val layoutParams =
             getView<TextView>(R.id.tvTitle)?.layoutParams as ConstraintLayout.LayoutParams
         layoutParams.startToStart = ConstraintLayout.NO_ID
@@ -146,7 +176,7 @@ class ZyToolBar : FrameLayout, OnTitleListener {
         }
     }
 
-    private fun centerTitle() {
+    fun centerTitle() {
         val layoutParams =
             getView<TextView>(R.id.tvTitle)?.layoutParams as ConstraintLayout.LayoutParams
         layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
@@ -154,4 +184,7 @@ class ZyToolBar : FrameLayout, OnTitleListener {
         layoutParams.startToEnd = ConstraintLayout.NO_ID
         layoutParams.marginStart = 0
     }
+
+    //是否初始化标题
+    fun isInitialize() = titleView != null
 }

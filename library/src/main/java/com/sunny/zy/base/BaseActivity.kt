@@ -3,6 +3,7 @@ package com.sunny.zy.base
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -10,6 +11,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -77,7 +80,7 @@ abstract class BaseActivity : AppCompatActivity(),
     open val defaultStateView: DefaultStateView by lazy {
         object : DefaultStateView(ZyBaseConfig.createStateView) {
             override fun getStateViewParent(): ViewGroup {
-                return parentView
+                return this@BaseActivity.getStateViewParent()
             }
         }
     }
@@ -92,6 +95,7 @@ abstract class BaseActivity : AppCompatActivity(),
         requestedOrientation = screenOrientation //强制屏幕
         setContentView(R.layout.zy_activity_base)
         statusBar.setBackgroundResource(mStatusBarColor)
+        toolbar.setBackgroundResource(mStatusBarColor)
         statusBar.layoutParams.height = DensityUtil.getStatusBarHeight()
 
         when (val layoutView = initLayout()) {
@@ -161,7 +165,7 @@ abstract class BaseActivity : AppCompatActivity(),
      * 状态覆盖层容器
      */
     override fun getStateViewParent(): ViewGroup {
-        return findViewById(android.R.id.content)
+        return parentView
     }
 
     /**
@@ -179,18 +183,27 @@ abstract class BaseActivity : AppCompatActivity(),
         onClickIntervalListener.onClick(view)
     }
 
-    /**
-     * 设置沉浸式背景
-     */
-    fun setImmersionBg(@DrawableRes drawable: Int, height: Int = 0) {
-        immersionBgSetting(height)
-        ivTopBg.setImageResource(drawable)
+    fun setStatusBarColor(){
+
     }
 
     /**
      * 设置沉浸式背景
      */
-    fun setImmersionBg(bitmap: Bitmap, height: Int = 0) {
+    fun setImmersionResource(@DrawableRes @ColorRes drawable: Int, height: Int = 0) {
+        immersionBgSetting(height)
+        ivTopBg.setImageResource(drawable)
+    }
+
+    fun setImmersionColor(@ColorInt color: Int, height: Int = 0) {
+        immersionBgSetting(height)
+        ivTopBg.setImageDrawable(ColorDrawable(color))
+    }
+
+    /**
+     * 设置沉浸式背景
+     */
+    fun setImmersionBitmap(bitmap: Bitmap, height: Int = 0) {
         immersionBgSetting(height)
         ivTopBg.setImageBitmap(bitmap)
     }
@@ -199,8 +212,12 @@ abstract class BaseActivity : AppCompatActivity(),
         statusBar.setBackgroundResource(android.R.color.transparent)
         toolbar.setBackgroundResource(android.R.color.transparent)
         if (height == 0) {
+            var toolbarHeight = 0
+            if (toolbar.visibility == View.VISIBLE) {
+                toolbarHeight = toolbar.toolbarHeight
+            }
             ivTopBg.layoutParams.height =
-                ZyBaseConfig.toolBarHeight + DensityUtil.getStatusBarHeight()
+                toolbarHeight + DensityUtil.getStatusBarHeight()
         } else {
             ivTopBg.layoutParams.height = height
         }

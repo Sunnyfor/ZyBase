@@ -20,8 +20,7 @@ import com.sunny.zy.widget.ZyToolBar
  * Mail sunnyfor98@gmail.com
  * Date 2018/8/2
  */
-abstract class BaseFragment : Fragment(), IBaseView, View.OnClickListener, OnTitleListener {
-
+abstract class BaseFragment : Fragment(), IBaseView, View.OnClickListener {
     private var savedInstanceState: Bundle? = null
 
     val toolbar: ZyToolBar
@@ -146,9 +145,9 @@ abstract class BaseFragment : Fragment(), IBaseView, View.OnClickListener, OnTit
         getBaseActivity().requestPermissions(permissions, permissionOkResult)
     }
 
-    override fun onDestroyView() {
-        onClose()
-        super.onDestroyView()
-    }
 
+    override fun onDestroy() {
+        onClose()
+        super.onDestroy()
+    }
 }
