@@ -14,13 +14,11 @@ import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.sunny.kit.listener.OnClickIntervalListener
 import com.sunny.kit.utils.DensityUtil
-import com.sunny.kit.utils.PermissionsUtil
 import com.sunny.zy.R
 import com.sunny.zy.base.bean.ErrorViewBean
 import com.sunny.zy.base.manager.ZyActivityManager
@@ -46,10 +44,6 @@ abstract class BaseActivity : AppCompatActivity(),
     private var isDark = false
 
     private var mStatusBarColor: Int = R.color.colorPrimary
-
-    private val permissionsUtil: PermissionsUtil by lazy {
-        PermissionsUtil(1100)
-    }
 
     //限制点击间隔
     private val onClickIntervalListener by lazy {
@@ -119,12 +113,6 @@ abstract class BaseActivity : AppCompatActivity(),
         loadData()
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        if (permissionsUtil.isNoHint) {
-            permissionsUtil.retryRequestPermissions(this)
-        }
-    }
 
     override fun onDestroy() {
         ZyActivityManager.removeActivity(this)
@@ -183,7 +171,7 @@ abstract class BaseActivity : AppCompatActivity(),
         onClickIntervalListener.onClick(view)
     }
 
-    fun setStatusBarColor(){
+    fun setStatusBarColor() {
 
     }
 
@@ -268,45 +256,4 @@ abstract class BaseActivity : AppCompatActivity(),
      */
     open fun onFragmentLoadFinish(fragment: Fragment) {}
 
-
-    /**
-     * 请求动态多权限
-     */
-    fun requestPermissions(
-        permission: Array<String>,
-        permissionOkResult: (() -> Unit)? = null
-    ) {
-        permissionsUtil.requestPermissions(this, permission, permissionOkResult)
-    }
-
-    /**
-     * 请求动态权限
-     */
-    fun requestPermissions(
-        permissions: String,
-        permissionOkResult: (() -> Unit)? = null
-    ) {
-        permissionsUtil.requestPermissions(this, permissions, permissionOkResult)
-    }
-
-    fun setPermissionsCancelFinish(isFinish: Boolean) {
-        permissionsUtil.isCancelFinish = isFinish
-    }
-
-    fun setPermissionsNoHintFinish(isFinish: Boolean) {
-        permissionsUtil.isNoHintFinish = isFinish
-    }
-
-    /**
-     * 权限回调
-     */
-    @RequiresApi(Build.VERSION_CODES.M)
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        permissionsUtil.onRequestPermissionsResult(this, requestCode, permissions, grantResults)
-    }
 }

@@ -131,21 +131,6 @@ abstract class BaseFragment : Fragment(), IBaseView, View.OnClickListener {
         return flParentView.findViewById(id)
     }
 
-    fun requestPermissions(
-        permission: Array<String>,
-        permissionOkResult: (() -> Unit)? = null
-    ) {
-        getBaseActivity().requestPermissions(permission, permissionOkResult)
-    }
-
-    fun requestPermissions(
-        permissions: String,
-        permissionOkResult: (() -> Unit)? = null
-    ) {
-        getBaseActivity().requestPermissions(permissions, permissionOkResult)
-    }
-
-
     override fun onDestroy() {
         onClose()
         super.onDestroy()
