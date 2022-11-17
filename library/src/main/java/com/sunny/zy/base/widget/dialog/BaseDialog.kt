@@ -8,15 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import com.sunny.kit.listener.OnClickIntervalListener
-import com.sunny.zy.R
-import com.sunny.zy.config.ZyBaseConfig
 import com.sunny.zy.base.IBaseView
 import com.sunny.zy.base.bean.ErrorViewBean
+import com.sunny.zy.config.ZyBaseConfig
 import com.sunny.zy.widget.DefaultStateView
 
 /**
@@ -44,10 +44,11 @@ abstract class BaseDialog(context: Context) : Dialog(context), IBaseView, View.O
         if (context is ContextWrapper) {
             if (context.baseContext is FragmentActivity) {
                 val activity = context.baseContext as FragmentActivity
-                activity.lifecycle.addObserver(object : LifecycleObserver {
-                    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-                    fun onDestroy() {
-                        dismiss()
+                activity.lifecycle.addObserver(object : LifecycleEventObserver {
+                    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                        if (event == Lifecycle.Event.ON_DESTROY) {
+                            cancel()
+                        }
                     }
                 })
             }
@@ -76,9 +77,6 @@ abstract class BaseDialog(context: Context) : Dialog(context), IBaseView, View.O
             }
         }
         setContentView(flParentView)
-//        setCancelable(false)
-//        setCanceledOnTouchOutside(false)
-//        window?.setGravity(Gravity.BOTTOM)
         window?.setBackgroundDrawableResource(android.R.color.transparent)
         window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         initView()
@@ -100,6 +98,13 @@ abstract class BaseDialog(context: Context) : Dialog(context), IBaseView, View.O
         }
     }
 
+    fun <T : View> getView(@IdRes id: Int): T {
+        return flParentView.findViewById(id)
+    }
+
+    override fun <T : View> findViewById(id: Int): T {
+        return getView(id)
+    }
 
     override fun showLoading() {
         defaultStateView.showLoading()
