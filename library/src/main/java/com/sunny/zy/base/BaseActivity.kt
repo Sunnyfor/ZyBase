@@ -9,11 +9,13 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -54,21 +56,21 @@ abstract class BaseActivity : AppCompatActivity(),
         }
     }
 
-    private val ivTopBg by lazy {
-        findViewById<ImageView>(R.id.ivTopBg)
+    private val ivTopBg: ImageView by lazy {
+        getView(R.id.ivTopBg)
     }
 
     open val toolbar: ZyToolBar by lazy {
-        findViewById(R.id.zyToolBar)
+        getView(R.id.zyToolBar)
     }
 
 
     open val statusBar: View by lazy {
-        findViewById(R.id.vStatusBar)
+        getView(R.id.vStatusBar)
     }
 
     open val parentView: FrameLayout by lazy {
-        findViewById(R.id.flContent)
+        getView(R.id.flContent)
     }
 
     open val defaultStateView: DefaultStateView by lazy {
@@ -171,8 +173,9 @@ abstract class BaseActivity : AppCompatActivity(),
         onClickIntervalListener.onClick(view)
     }
 
-    fun setStatusBarColor() {
 
+    fun <T : View> getView(@IdRes id: Int): T {
+        return findViewById(id)
     }
 
     /**
@@ -238,6 +241,14 @@ abstract class BaseActivity : AppCompatActivity(),
 
     fun hideStatusBar() {
         statusBar.visibility = View.GONE
+    }
+
+    fun showKeyboard(editText: EditText, delayMillis: Long = 100) {
+        editText.postDelayed({
+            editText.requestFocus()
+            val im = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            im.showSoftInput(editText, InputMethodManager.SHOW_FORCED)
+        }, delayMillis)
     }
 
     /**
