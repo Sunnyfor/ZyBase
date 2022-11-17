@@ -1,15 +1,16 @@
 package com.sunny.zy.utils
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
-import com.sunny.kit.utils.SpUtil
+import com.sunny.kit.utils.LogUtil
+import com.sunny.zy.R
 import com.sunny.zy.base.manager.ZyActivityManager
+import com.sunny.zy.base.widget.dialog.BasePermissionsDialog
 
 /**
  * Desc
@@ -17,11 +18,12 @@ import com.sunny.zy.base.manager.ZyActivityManager
  * Mail sunnyfor98@gmail.com
  * Date 2020/12/21 17:00
  */
-class PermissionsUtil(var permissionResult: PermissionResult) {
+class PermissionsUtil(
+    private var permissionResult: PermissionResult,
+    private var dialog: BasePermissionsDialog? = null
+) {
 
-    var isCancelFinish = false
-
-    var isNoHintFinish = false
+    var isCancelFinish = true
 
     private var isNoHint = false
 
@@ -46,14 +48,15 @@ class PermissionsUtil(var permissionResult: PermissionResult) {
                     }
                 }
                 if (failedList.isEmpty()) {
+                    dialog?.dismiss()
                     permissionResult.onPermissionSuccess(successList)
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        isNoHint = !failedList.all {
+                        isNoHint = failedList.all {
                             activity.shouldShowRequestPermissionRationale(it)
                         }
+                        LogUtil.i("权限是否拒绝:$isNoHint")
                     }
-                    SpUtil.get().setBoolean("isNoHint", isNoHint)
                     showSettingPermissionDialog(Array(failedList.size) { failedList[it] })
                     permissionResult.onPermissionFailed(failedList)
                 }
@@ -66,27 +69,7 @@ class PermissionsUtil(var permissionResult: PermissionResult) {
             permissions.addAll(permission)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val failedList = arrayListOf<String>()
-            permissions.forEach {
-                if (activity.checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    failedList.add(it)
-                }
-            }
-            if (failedList.isEmpty()) {
-                isNoHint = false
-                SpUtil.get().remove("isNoHint")
-                permissionResult.onPermissionSuccess(permissions)
-            } else {
-                isNoHint = SpUtil.get().getBoolean("isNoHint")
-                if (isNoHint) {
-                    showSettingPermissionDialog(
-                        Array(failedList.size) { failedList[it] }
-                    )
-                } else {
-                    launcher?.launch(Array(permissions.size) { permissions[it] })
-                }
-            }
+            launcher?.launch(Array(permissions.size) { permissions[it] })
         } else {
             permissionResult.onPermissionSuccess(permissions)
         }
@@ -96,41 +79,79 @@ class PermissionsUtil(var permissionResult: PermissionResult) {
     private fun showSettingPermissionDialog(
         failedPermission: Array<String>
     ) {
-        val build = AlertDialog.Builder(activity)
-        build.setTitle("帮助")
-        val messageSb = StringBuilder()
-        val pm = activity.packageManager
-        failedPermission.forEach {
-            val permissionInfo = pm.getPermissionInfo(it, 0)
-            val permissionName = permissionInfo.loadLabel(pm)
-            if (!messageSb.contains(permissionName)) {
-                messageSb.append("【").append(permissionName).append("】").append(" ")
-            }
+        if (dialog == null) {
+            initDefaultDialog()
         }
-        build.setMessage("当前应用缺少${messageSb}权限,此功能无法正常使用！")
-        if (isNoHint) {
-            build.setPositiveButton("设置") { _, _ ->
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                val uri = Uri.fromParts("package", activity.packageName, null)
-                intent.data = uri
-                activity.startActivity(intent)
+        dialog?.let {
+            it.setCancelable(false)
+            it.show()
+
+            it.getTitleTextView().text = it.setTitle
+            val messageSb = StringBuilder()
+            if (it.setMessageCallBack != null) {
+                messageSb.append(it.setMessageCallBack?.invoke(failedPermission))
+            } else {
+                val pm = activity.packageManager
+                messageSb.append("当前应用缺少")
+                failedPermission.forEach { permission ->
+                    val permissionInfo = pm.getPermissionInfo(permission, 0)
+                    val permissionName = permissionInfo.loadLabel(pm)
+                    if (!messageSb.contains(permissionName)) {
+                        messageSb.append("【").append(permissionName).append("】")
+                    }
+                }
+                messageSb.append("权限，此功能无法正常使用！")
             }
-        } else {
-            build.setPositiveButton("授权") { _, _ ->
-                requestPermissions(*failedPermission)
-            }
-        }
-        build.setNegativeButton("取消") { _, _ ->
-            if (isCancelFinish) {
-                activity.finish()
+            it.getMessageTextView().text = messageSb
+
+
+            if (isNoHint) {
+                it.getPositiveTextView().text = it.setAuthor
+                it.setPositiveCallBack = {
+                    requestPermissions(*failedPermission)
+                }
+            } else {
+                it.getPositiveTextView().text = it.setSetting
+                it.setPositiveCallBack = {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    val uri = Uri.fromParts("package", activity.packageName, null)
+                    intent.data = uri
+                    activity.startActivity(intent)
+                }
             }
 
-            if (isNoHint && isNoHintFinish) {
-                activity.finish()
+            it.getNegativeTextView().text = it.setCancel
+            it.setNegativeCallBack = {
+                it.dismiss()
+                if (isCancelFinish) {
+                    activity.finish()
+                }
             }
         }
-        build.setCancelable(false)
-        build.show()
+    }
+
+
+    private fun initDefaultDialog() {
+        dialog = object : BasePermissionsDialog(activity) {
+
+            override fun initLayout() = R.layout.zy_dialog_confirm
+
+            override fun getPositiveTextView(): TextView {
+                return getView(R.id.tvConfirm)
+            }
+
+            override fun getNegativeTextView(): TextView {
+                return getView(R.id.tvCancel)
+            }
+
+            override fun getMessageTextView(): TextView {
+                return getView(R.id.tvMessage)
+            }
+
+            override fun getTitleTextView(): TextView {
+                return getView(R.id.tvTitle)
+            }
+        }
     }
 
     interface PermissionResult {
