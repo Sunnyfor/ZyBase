@@ -33,6 +33,7 @@
         android:paddingEnd="@dimen/dp_14"
         android:textColor="@android:color/black"
         android:textSize="@dimen/dp_14"
+        android:textStyle="bold"
         tools:text="@string/placeholder"/>
 
     <View
@@ -55,7 +56,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@android:color/black"
             android:text="取消"
             android:textSize="@dimen/sp_16" />
 

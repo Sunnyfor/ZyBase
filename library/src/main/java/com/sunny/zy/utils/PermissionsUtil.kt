@@ -134,7 +134,7 @@ class PermissionsUtil(
     private fun initDefaultDialog() {
         dialog = object : BasePermissionsDialog(activity) {
 
-            override fun initLayout() = R.layout.zy_dialog_confirm
+            override fun initLayout() = R.layout.zy_dialog_general
 
             override fun getPositiveTextView(): TextView {
                 return getView(R.id.tvConfirm)
