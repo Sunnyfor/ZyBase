@@ -1,7 +1,5 @@
 package com.sunny.zy.base.manager
 
-import com.sunny.kit.utils.LogUtil
-import com.sunny.zy.ZyFrameStore
 import com.sunny.zy.base.BaseActivity
 import java.util.*
 
