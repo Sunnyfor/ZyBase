@@ -18,7 +18,7 @@ abstract class DefaultStateView(var createStateView: ICreateStateView) : IStateV
     }
 
     private val errorView by lazy {
-        createStateView.getErrorView(getStateViewParent().context).apply {
+        createStateView.getPlaceholderView(getStateViewParent().context).apply {
             setOnClickListener { }
         }
     }
@@ -36,7 +36,7 @@ abstract class DefaultStateView(var createStateView: ICreateStateView) : IStateV
 
     override fun showError(bean: PlaceholderBean) {
         hideLoading()
-        createStateView.showError(errorView,bean)
+        createStateView.showPlaceholder(errorView,bean)
         if (errorView.parent == null) {
             getStateViewParent().addView(errorView)
         }

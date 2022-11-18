@@ -4,12 +4,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.sunny.zy.R
 import com.sunny.zy.base.manager.ActivityManager
-import com.sunny.zy.base.widget.dialog.BasePermissionsDialog
+import com.sunny.zy.base.widget.dialog.ConfirmDialog
 
 /**
  * Desc
@@ -18,8 +17,7 @@ import com.sunny.zy.base.widget.dialog.BasePermissionsDialog
  * Date 2020/12/21 17:00
  */
 class PermissionUtil(
-    private var permissionResult: PermissionResult,
-    private var dialog: BasePermissionsDialog? = null
+    private var permissionResult: PermissionResult
 ) {
 
     var isCancelFinish = true
@@ -33,6 +31,8 @@ class PermissionUtil(
     private val activity by lazy {
         ActivityManager.getLastActivity()
     }
+
+    var dialog: ConfirmDialog? = ConfirmDialog(activity)
 
     init {
         launcher =
@@ -78,77 +78,46 @@ class PermissionUtil(
         failedPermission: Array<String>
     ) {
         if (dialog == null) {
-            initDefaultDialog()
+            return
         }
-        dialog?.let {
-            it.setCancelable(false)
-            it.show()
-
-            it.getTitleTextView().text = it.setTitle
-            val messageSb = StringBuilder()
-            if (it.setMessageCallBack != null) {
-                messageSb.append(it.setMessageCallBack?.invoke(failedPermission))
-            } else {
-                val pm = activity.packageManager
-                messageSb.append("当前应用缺少")
-                failedPermission.forEach { permission ->
-                    val permissionInfo = pm.getPermissionInfo(permission, 0)
-                    val permissionName = permissionInfo.loadLabel(pm)
-                    if (!messageSb.contains(permissionName)) {
-                        messageSb.append("【").append(permissionName).append("】")
-                    }
-                }
-                messageSb.append("权限，此功能无法正常使用！")
-            }
-            it.getMessageTextView().text = messageSb
-
-
-            if (isNoHint) {
-                it.getPositiveTextView().text = it.setAuthor
-                it.setPositiveCallBack = {
-                    requestPermissions(*failedPermission)
-                }
-            } else {
-                it.getPositiveTextView().text = it.setSetting
-                it.setPositiveCallBack = {
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    val uri = Uri.fromParts("package", activity.packageName, null)
-                    intent.data = uri
-                    activity.startActivity(intent)
-                }
-            }
-
-            it.getNegativeTextView().text = it.setCancel
-            it.setNegativeCallBack = {
-                it.dismiss()
-                if (isCancelFinish) {
-                    activity.finish()
-                }
+        val messageSb = StringBuilder()
+        val pm = activity.packageManager
+        messageSb.append("当前应用缺少")
+        failedPermission.forEach { permission ->
+            val permissionInfo = pm.getPermissionInfo(permission, 0)
+            val permissionName = permissionInfo.loadLabel(pm)
+            if (!messageSb.contains(permissionName)) {
+                messageSb.append("【").append(permissionName).append("】")
             }
         }
+        messageSb.append("权限，此功能无法正常使用！")
+        dialog!!.setContentText = messageSb.toString()
+
+        if (isNoHint) {
+            dialog!!.setConfirmText = activity.getString(R.string.dialogAuthor)
+            dialog!!.setOnConfirmListener = {
+                requestPermissions(*failedPermission)
+            }
+        } else {
+            dialog!!.setConfirmText = activity.getString(R.string.dialogSetting)
+            dialog!!.setOnConfirmListener = {
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                val uri = Uri.fromParts("package", activity.packageName, null)
+                intent.data = uri
+                activity.startActivity(intent)
+            }
+        }
+
+        dialog!!.setCancelText = activity.getString(R.string.dialogCancel)
+        dialog!!.setOnCancelListener = {
+            dialog!!.dismiss()
+            if (isCancelFinish) {
+                activity.finish()
+            }
+        }
+
+        dialog!!.setCancelable(false)
+        dialog!!.show()
     }
 
-
-    private fun initDefaultDialog() {
-        dialog = object : BasePermissionsDialog(activity) {
-
-            override fun initLayout() = R.layout.zy_dialog_general
-
-            override fun getPositiveTextView(): TextView {
-                return getView(R.id.tvConfirm)
-            }
-
-            override fun getNegativeTextView(): TextView {
-                return getView(R.id.tvCancel)
-            }
-
-            override fun getMessageTextView(): TextView {
-                return getView(R.id.tvMessage)
-            }
-
-            override fun getTitleTextView(): TextView {
-                return getView(R.id.tvTitle)
-            }
-        }
-    }
 }

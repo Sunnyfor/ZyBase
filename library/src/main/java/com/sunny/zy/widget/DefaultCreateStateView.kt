@@ -20,11 +20,11 @@ open class DefaultCreateStateView : ICreateStateView {
         return View.inflate(context, R.layout.zy_layout_loading, null)
     }
 
-    override fun getErrorView(context: Context): View {
-        return View.inflate(context, R.layout.zy_layout_error, null)
+    override fun getPlaceholderView(context: Context): View {
+        return View.inflate(context, R.layout.zy_layout_placeholder, null)
     }
 
-    override fun showError(errorView: View,bean: PlaceholderBean) {
+    override fun showPlaceholder(errorView: View, bean: PlaceholderBean) {
         val tvTitle = errorView.findViewById<TextView>(R.id.tvDesc)
         tvTitle.text = bean.desc
         val ivIcon = errorView.findViewById<ImageView>(R.id.ivIcon)

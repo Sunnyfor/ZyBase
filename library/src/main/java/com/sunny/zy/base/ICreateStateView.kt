@@ -13,7 +13,7 @@ interface ICreateStateView {
 
     fun getLoadView(context: Context): View
 
-    fun getErrorView(context: Context): View
+    fun getPlaceholderView(context: Context): View
 
-    fun showError(errorView: View, bean: PlaceholderBean)
+    fun showPlaceholder(errorView: View, bean: PlaceholderBean)
 }

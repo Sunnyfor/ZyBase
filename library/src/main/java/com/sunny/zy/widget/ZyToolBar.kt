@@ -17,7 +17,7 @@ import com.sunny.zy.base.bean.MenuBean
 import com.sunny.zy.config.ZyBaseConfig
 
 class ZyToolBar : FrameLayout, OnTitleListener {
-    private var defaultRes = R.layout.zy_default_title
+    private var defaultRes = R.layout.zy_layout_title
     private var layoutRes = 0
     private var titleView: View? = null
     var toolbarHeight = 0 //设置标题栏高度

@@ -15,7 +15,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.sunny.kit.listener.OnClickIntervalListener
 import com.sunny.zy.base.IBaseView
-import com.sunny.zy.base.bean.ErrorViewBean
+import com.sunny.zy.base.bean.PlaceholderBean
 import com.sunny.zy.config.ZyBaseConfig
 import com.sunny.zy.widget.DefaultStateView
 
@@ -114,7 +114,7 @@ abstract class BaseDialog(context: Context) : Dialog(context), IBaseView, View.O
         defaultStateView.hideLoading()
     }
 
-    override fun showError(bean: ErrorViewBean) {
+    override fun showError(bean: PlaceholderBean) {
         defaultStateView.showError(bean)
     }
 
