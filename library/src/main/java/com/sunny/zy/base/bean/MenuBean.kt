@@ -34,7 +34,7 @@ class MenuBean {
 
     constructor()
 
-    constructor(title: String, icon: Int, onClickListener: View.OnClickListener?) {
+    constructor(title: String, icon: Int = 0, onClickListener: View.OnClickListener?) {
         this.title = title
         this.icon = icon
         this.onClickListener = onClickListener

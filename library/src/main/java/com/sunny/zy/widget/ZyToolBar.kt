@@ -123,12 +123,12 @@ class ZyToolBar : FrameLayout, OnTitleListener {
     }
 
     override fun setTitleSimple(title: String, vararg menuItem: MenuBean) {
-        setBackTitle(R.drawable.svg_title_back, "", title, menuItem.toMutableList())
+        setBackTitle(R.drawable.zy_svg_title_back, "", title, menuItem.toMutableList())
         leftTitle()
     }
 
     override fun setTitleCenterSimple(title: String, vararg menuItem: MenuBean) {
-        setBackTitle(R.drawable.svg_title_back, "", title, menuItem.toMutableList())
+        setBackTitle(R.drawable.zy_svg_title_back, "", title, menuItem.toMutableList())
         centerTitle()
     }
 
@@ -136,7 +136,7 @@ class ZyToolBar : FrameLayout, OnTitleListener {
     override fun setTitleDefault(title: String, vararg menuItem: MenuBean) {
         leftTitle()
         setBackTitle(
-            R.drawable.svg_title_back,
+            R.drawable.zy_svg_title_back,
             "",
             title,
             menuItem.toMutableList()
@@ -146,7 +146,7 @@ class ZyToolBar : FrameLayout, OnTitleListener {
     override fun setTitleCenterDefault(title: String, vararg menuItem: MenuBean) {
         centerTitle()
         setBackTitle(
-            R.drawable.svg_title_back,
+            R.drawable.zy_svg_title_back,
             "",
             title,
             menuItem.toMutableList()
@@ -184,7 +184,4 @@ class ZyToolBar : FrameLayout, OnTitleListener {
         layoutParams.startToEnd = ConstraintLayout.NO_ID
         layoutParams.marginStart = 0
     }
-
-    //是否初始化标题
-    fun isInitialize() = titleView != null
 }

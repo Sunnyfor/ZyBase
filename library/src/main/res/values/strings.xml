@@ -2,4 +2,7 @@
     <string name="placeholder">ZyBase</string>
     <string name="titleBack">返回</string>
     <string name="loading">正在加载</string>
+    <string name="emptyData">暂无数据</string>
+    <string name="networkError">无法连接到网络</string>
+    <string name="otherError">未知错误</string>
 </resources>

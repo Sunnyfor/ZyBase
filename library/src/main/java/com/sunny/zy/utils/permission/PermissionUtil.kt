@@ -1,4 +1,4 @@
-package com.sunny.zy.utils
+package com.sunny.zy.utils.permission
 
 import android.content.Intent
 import android.net.Uri
@@ -7,9 +7,8 @@ import android.provider.Settings
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import com.sunny.kit.utils.LogUtil
 import com.sunny.zy.R
-import com.sunny.zy.base.manager.ZyActivityManager
+import com.sunny.zy.base.manager.ActivityManager
 import com.sunny.zy.base.widget.dialog.BasePermissionsDialog
 
 /**
@@ -18,7 +17,7 @@ import com.sunny.zy.base.widget.dialog.BasePermissionsDialog
  * Mail sunnyfor98@gmail.com
  * Date 2020/12/21 17:00
  */
-class PermissionsUtil(
+class PermissionUtil(
     private var permissionResult: PermissionResult,
     private var dialog: BasePermissionsDialog? = null
 ) {
@@ -32,7 +31,7 @@ class PermissionsUtil(
     private var launcher: ActivityResultLauncher<Array<String>>? = null
 
     private val activity by lazy {
-        ZyActivityManager.getLastActivity()
+        ActivityManager.getLastActivity()
     }
 
     init {
@@ -55,7 +54,6 @@ class PermissionsUtil(
                         isNoHint = failedList.all {
                             activity.shouldShowRequestPermissionRationale(it)
                         }
-                        LogUtil.i("权限是否拒绝:$isNoHint")
                     }
                     showSettingPermissionDialog(Array(failedList.size) { failedList[it] })
                     permissionResult.onPermissionFailed(failedList)
@@ -152,10 +150,5 @@ class PermissionsUtil(
                 return getView(R.id.tvTitle)
             }
         }
-    }
-
-    interface PermissionResult {
-        fun onPermissionSuccess(permissions: List<String>)
-        fun onPermissionFailed(permissions: List<String>)
     }
 }

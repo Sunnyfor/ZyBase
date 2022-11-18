@@ -3,7 +3,7 @@ package com.sunny.zy.base.manager
 import com.sunny.zy.base.BaseActivity
 import java.util.*
 
-object ZyActivityManager {
+object ActivityManager {
 
     const val KILL = 0
 

@@ -7,7 +7,7 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.sunny.zy.R
 import com.sunny.zy.base.ICreateStateView
-import com.sunny.zy.base.bean.ErrorViewBean
+import com.sunny.zy.base.bean.PlaceholderBean
 
 /**
  * Desc
@@ -24,7 +24,7 @@ open class DefaultCreateStateView : ICreateStateView {
         return View.inflate(context, R.layout.zy_layout_error, null)
     }
 
-    override fun showError(errorView: View,bean: ErrorViewBean) {
+    override fun showError(errorView: View,bean: PlaceholderBean) {
         val tvTitle = errorView.findViewById<TextView>(R.id.tvDesc)
         tvTitle.text = bean.desc
         val ivIcon = errorView.findViewById<ImageView>(R.id.ivIcon)

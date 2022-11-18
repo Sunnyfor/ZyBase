@@ -1,7 +1,7 @@
 package com.sunny.zy.base
 
 import android.view.ViewGroup
-import com.sunny.zy.base.bean.ErrorViewBean
+import com.sunny.zy.base.bean.PlaceholderBean
 
 /**
  * Desc 占位图抽象View
@@ -14,7 +14,7 @@ interface IStateView {
 
     fun hideLoading()
 
-    fun showError(bean: ErrorViewBean)
+    fun showError(bean: PlaceholderBean)
 
     fun hideError()
 

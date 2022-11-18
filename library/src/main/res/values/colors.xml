@@ -9,4 +9,6 @@
     <color name="colorTheme">#2A90FC</color>
     <!--覆盖物颜色-->
     <color name="colorOverlay">#4C000000</color>
+    <!--线条脸色-->
+    <color name="colorLine">@android:color/darker_gray</color>
 </resources>

@@ -2,7 +2,7 @@ package com.sunny.zy.base
 
 import android.content.Context
 import android.view.View
-import com.sunny.zy.base.bean.ErrorViewBean
+import com.sunny.zy.base.bean.PlaceholderBean
 
 /**
  * Desc
@@ -15,5 +15,5 @@ interface ICreateStateView {
 
     fun getErrorView(context: Context): View
 
-    fun showError(errorView: View, bean: ErrorViewBean)
+    fun showError(errorView: View, bean: PlaceholderBean)
 }

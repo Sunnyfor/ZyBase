@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/placeholder"
-        android:scaleType="matrix"
-        android:src="@drawable/svg_placeholder" />
+        android:src="@drawable/zy_svg_empty_data" />
 
     <TextView
         android:id="@+id/tvDesc"
@@ -20,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/ivIcon"
         android:layout_centerHorizontal="true"
+        android:textColor="#c2c8d8"
         android:textSize="@dimen/sp_16"
         android:text="@string/placeholder"
         android:layout_marginTop="@dimen/dp_15"/>

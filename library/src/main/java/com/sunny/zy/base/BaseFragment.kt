@@ -8,7 +8,7 @@ import android.widget.FrameLayout
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import com.sunny.kit.listener.OnClickIntervalListener
-import com.sunny.zy.base.bean.ErrorViewBean
+import com.sunny.zy.base.bean.PlaceholderBean
 import com.sunny.zy.config.ZyBaseConfig
 import com.sunny.zy.widget.DefaultStateView
 import com.sunny.zy.widget.ZyToolBar
@@ -95,7 +95,7 @@ abstract class BaseFragment : Fragment(), IBaseView, View.OnClickListener {
         defaultStateView.hideLoading()
     }
 
-    override fun showError(bean: ErrorViewBean) {
+    override fun showError(bean: PlaceholderBean) {
         defaultStateView.showError(bean)
     }
 

@@ -2,7 +2,7 @@ package com.sunny.zy.widget
 
 import com.sunny.zy.base.ICreateStateView
 import com.sunny.zy.base.IStateView
-import com.sunny.zy.base.bean.ErrorViewBean
+import com.sunny.zy.base.bean.PlaceholderBean
 
 /**
  * Desc
@@ -34,7 +34,7 @@ abstract class DefaultStateView(var createStateView: ICreateStateView) : IStateV
         getStateViewParent().removeView(loadingView)
     }
 
-    override fun showError(bean: ErrorViewBean) {
+    override fun showError(bean: PlaceholderBean) {
         hideLoading()
         createStateView.showError(errorView,bean)
         if (errorView.parent == null) {

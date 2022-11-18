@@ -22,8 +22,8 @@ import androidx.fragment.app.Fragment
 import com.sunny.kit.listener.OnClickIntervalListener
 import com.sunny.kit.utils.DensityUtil
 import com.sunny.zy.R
-import com.sunny.zy.base.bean.ErrorViewBean
-import com.sunny.zy.base.manager.ZyActivityManager
+import com.sunny.zy.base.bean.PlaceholderBean
+import com.sunny.zy.base.manager.ActivityManager
 import com.sunny.zy.config.ZyBaseConfig
 import com.sunny.zy.widget.DefaultStateView
 import com.sunny.zy.widget.ZyToolBar
@@ -110,14 +110,14 @@ abstract class BaseActivity : AppCompatActivity(),
             }
         }
         setStatusBarModel(false)
-        ZyActivityManager.addActivity(this)
+        ActivityManager.addActivity(this)
         initView()
         loadData()
     }
 
 
     override fun onDestroy() {
-        ZyActivityManager.removeActivity(this)
+        ActivityManager.removeActivity(this)
         onClose()
         super.onDestroy()
     }
@@ -139,7 +139,7 @@ abstract class BaseActivity : AppCompatActivity(),
     /**
      * 显示错误覆盖层
      */
-    override fun showError(bean: ErrorViewBean) {
+    override fun showError(bean: PlaceholderBean) {
         defaultStateView.showError(bean)
     }
 
