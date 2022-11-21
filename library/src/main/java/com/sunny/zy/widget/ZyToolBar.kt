@@ -12,11 +12,10 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.sunny.zy.R
-import com.sunny.zy.base.OnTitleListener
 import com.sunny.zy.base.bean.MenuBean
 import com.sunny.zy.config.ZyBaseConfig
 
-class ZyToolBar : FrameLayout, OnTitleListener {
+class ZyToolBar : FrameLayout {
     private var defaultRes = R.layout.zy_layout_title
     private var layoutRes = 0
     private var titleView: View? = null
@@ -114,26 +113,26 @@ class ZyToolBar : FrameLayout, OnTitleListener {
         titleView?.setPadding(left, top, right, bottom)
     }
 
-    override fun showTitle() {
+    fun showTitle() {
         titleView?.visibility = View.VISIBLE
     }
 
-    override fun hideTitle() {
+    fun hideTitle() {
         titleView?.visibility = View.GONE
     }
 
-    override fun setTitleSimple(title: String, vararg menuItem: MenuBean) {
+    fun setTitleSimple(title: String, vararg menuItem: MenuBean) {
         setBackTitle(R.drawable.zy_svg_title_back, "", title, menuItem.toMutableList())
         leftTitle()
     }
 
-    override fun setTitleCenterSimple(title: String, vararg menuItem: MenuBean) {
+    fun setTitleCenterSimple(title: String, vararg menuItem: MenuBean) {
         setBackTitle(R.drawable.zy_svg_title_back, "", title, menuItem.toMutableList())
         centerTitle()
     }
 
 
-    override fun setTitleDefault(title: String, vararg menuItem: MenuBean) {
+    fun setTitleDefault(title: String, vararg menuItem: MenuBean) {
         leftTitle()
         setBackTitle(
             R.drawable.zy_svg_title_back,
@@ -143,7 +142,7 @@ class ZyToolBar : FrameLayout, OnTitleListener {
         )
     }
 
-    override fun setTitleCenterDefault(title: String, vararg menuItem: MenuBean) {
+    fun setTitleCenterDefault(title: String, vararg menuItem: MenuBean) {
         centerTitle()
         setBackTitle(
             R.drawable.zy_svg_title_back,
@@ -153,7 +152,7 @@ class ZyToolBar : FrameLayout, OnTitleListener {
         )
     }
 
-    override fun setTitleCustom(@DrawableRes layoutRes: Int) {
+    fun setTitleCustom(@DrawableRes layoutRes: Int) {
         getView<ZyMenuView>(R.id.zvLeft)?.removeAllViews()
         getView<ZyMenuView>(R.id.zvRight)?.removeAllViews()
         this@ZyToolBar.layoutRes = layoutRes
