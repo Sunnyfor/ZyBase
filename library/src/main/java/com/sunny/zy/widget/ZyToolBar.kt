@@ -10,6 +10,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.sunny.zy.R
 import com.sunny.zy.base.bean.MenuBean
@@ -140,7 +141,7 @@ class ZyToolBar : FrameLayout {
         centerTitle()
     }
 
-    fun setTitleCustom(@DrawableRes layoutRes: Int) {
+    fun setTitleCustom(@LayoutRes layoutRes: Int) {
         getView<ZyMenuView>(R.id.zvLeft)?.removeAllViews()
         getView<ZyMenuView>(R.id.zvRight)?.removeAllViews()
         this@ZyToolBar.layoutRes = layoutRes
