@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.sunny.kit.listener.OnClickIntervalListener
+import com.sunny.zy.listener.OnClickIntervalListener
 import com.sunny.zy.R
 import com.sunny.zy.base.bean.MenuBean
 

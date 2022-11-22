@@ -19,7 +19,7 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import com.sunny.kit.listener.OnClickIntervalListener
+import com.sunny.zy.listener.OnClickIntervalListener
 import com.sunny.kit.utils.DensityUtil
 import com.sunny.zy.R
 import com.sunny.zy.base.bean.PlaceholderBean

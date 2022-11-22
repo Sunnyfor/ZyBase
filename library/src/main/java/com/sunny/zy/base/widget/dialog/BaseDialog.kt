@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import com.sunny.kit.listener.OnClickIntervalListener
+import com.sunny.zy.listener.OnClickIntervalListener
 import com.sunny.zy.base.IBaseView
 import com.sunny.zy.base.bean.PlaceholderBean
 import com.sunny.zy.config.ZyBaseConfig

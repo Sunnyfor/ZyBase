@@ -15,6 +15,11 @@ import com.sunny.zy.widget.DefaultCreateStateView
 object ZyBaseConfig {
 
     /**
+     * 两次点击事件间隔，单位毫秒
+     */
+    var clickInterval = 500L
+
+    /**
      * 设置StatusBar文字颜色
      */
     var statusBarIsDark = false
@@ -40,7 +45,7 @@ object ZyBaseConfig {
     var toolbarTextSize = ZyKit.getContext().resources.getDimension(R.dimen.dp_18)
 
     /**
-     * 图标大小
+     * 获取Application
      */
-    var toolbarIconSize = ZyKit.getContext().resources.getDimensionPixelOffset(R.dimen.dp_20)
+    fun getContext() = ZyKit.getContext()
 }
