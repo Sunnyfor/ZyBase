@@ -35,49 +35,11 @@ class ZyToolBar : FrameLayout {
 
     fun getTitle(): TextView? = getView<TextView>(R.id.tvTitle)
 
-    fun setBackTitle(
-        @DrawableRes backIcon: Int,
-        backText: String,
-        title: String,
-        rightMenu: List<MenuBean> = arrayListOf()
-    ) {
-        val backMenuBean = MenuBean(backText, backIcon) {
-            if (context is Activity) {
-                (context as Activity).finish()
-            }
-        }
-        backMenuBean.textSize = resources.getDimension(R.dimen.dp_15)
-        backMenuBean.showType = MenuBean.SHOW_TYPE_ALL
-        backMenuBean.orientation = MenuBean.HORIZONTAL
-        setTitle(arrayListOf(backMenuBean), title, rightMenu)
-    }
-
-
-    fun setTitle(leftMenu: List<MenuBean>, title: String, rightMenu: List<MenuBean>) {
-        layoutRes = defaultRes
-        initTitleView()
-        getView<ZyMenuView>(R.id.zvLeft)?.setMenu(leftMenu)
-        getView<TextView>(R.id.tvTitle)?.let {
-            it.text = title
-            if (ZyBaseConfig.toolbarTextSize > 0) {
-                it.setTextSize(TypedValue.COMPLEX_UNIT_PX, ZyBaseConfig.toolbarTextSize)
-            }
-        }
-        getView<ZyMenuView>(R.id.zvRight)?.setMenu(rightMenu)
-        if (toolbarHeight == 0) {
-            toolbarHeight = ZyBaseConfig.toolBarHeight
-        }
-        val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, toolbarHeight)
-        addView(titleView, layoutParams)
-    }
-
-
     private fun initTitleView() {
         removeAllViews()
         titleView = LayoutInflater.from(context).inflate(layoutRes, this, false)
         setPadding(ZyBaseConfig.toolbarPadding, ZyBaseConfig.toolbarPadding)
     }
-
 
     fun setLeftPadding(left: Int) {
         titleView?.let {
@@ -113,43 +75,69 @@ class ZyToolBar : FrameLayout {
         titleView?.setPadding(left, top, right, bottom)
     }
 
-    fun showTitle() {
-        titleView?.visibility = View.VISIBLE
+    fun setBackTitle(
+        @DrawableRes backIcon: Int,
+        backText: String,
+        title: String,
+        rightMenu: List<MenuBean> = arrayListOf()
+    ) {
+        val backMenuBean = MenuBean(backText, backIcon) {
+            if (context is Activity) {
+                (context as Activity).finish()
+            }
+        }
+        backMenuBean.textSize = resources.getDimension(R.dimen.dp_15)
+        backMenuBean.showType = MenuBean.SHOW_TYPE_ALL
+        backMenuBean.orientation = MenuBean.HORIZONTAL
+        setTitle(arrayListOf(backMenuBean), title, rightMenu)
     }
 
-    fun hideTitle() {
-        titleView?.visibility = View.GONE
+    fun setTitle(leftMenu: List<MenuBean>, title: String, rightMenu: List<MenuBean>) {
+        layoutRes = defaultRes
+        initTitleView()
+        getView<ZyMenuView>(R.id.zvLeft)?.setMenu(leftMenu)
+        getView<TextView>(R.id.tvTitle)?.let {
+            it.text = title
+            if (ZyBaseConfig.toolbarTextSize > 0) {
+                it.setTextSize(TypedValue.COMPLEX_UNIT_PX, ZyBaseConfig.toolbarTextSize)
+            }
+        }
+        getView<ZyMenuView>(R.id.zvRight)?.setMenu(rightMenu)
+        if (toolbarHeight == 0) {
+            toolbarHeight = ZyBaseConfig.toolBarHeight
+        }
+        val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, toolbarHeight)
+        addView(titleView, layoutParams)
     }
 
     fun setTitleSimple(title: String, vararg menuItem: MenuBean) {
-        setBackTitle(R.drawable.zy_svg_title_back, "", title, menuItem.toMutableList())
+        setTitle(arrayListOf(),title, menuItem.toMutableList())
         leftTitle()
     }
 
     fun setTitleCenterSimple(title: String, vararg menuItem: MenuBean) {
-        setBackTitle(R.drawable.zy_svg_title_back, "", title, menuItem.toMutableList())
+        setTitle(arrayListOf(),title, menuItem.toMutableList())
         centerTitle()
     }
 
-
     fun setTitleDefault(title: String, vararg menuItem: MenuBean) {
-        leftTitle()
         setBackTitle(
             R.drawable.zy_svg_title_back,
             "",
             title,
             menuItem.toMutableList()
         )
+        leftTitle()
     }
 
     fun setTitleCenterDefault(title: String, vararg menuItem: MenuBean) {
-        centerTitle()
         setBackTitle(
             R.drawable.zy_svg_title_back,
             "",
             title,
             menuItem.toMutableList()
         )
+        centerTitle()
     }
 
     fun setTitleCustom(@DrawableRes layoutRes: Int) {
@@ -163,8 +151,8 @@ class ZyToolBar : FrameLayout {
     fun leftTitle() {
         val layoutParams =
             getView<TextView>(R.id.tvTitle)?.layoutParams as ConstraintLayout.LayoutParams
-        layoutParams.startToStart = ConstraintLayout.NO_ID
-        layoutParams.endToEnd = ConstraintLayout.NO_ID
+        layoutParams.startToStart = ConstraintLayout.LayoutParams.UNSET
+        layoutParams.endToEnd = ConstraintLayout.LayoutParams.UNSET
         layoutParams.startToEnd = R.id.zvLeft
         val visibility = getView<View>(R.id.zvLeft)?.visibility
 
@@ -176,11 +164,21 @@ class ZyToolBar : FrameLayout {
     }
 
     fun centerTitle() {
-        val layoutParams =
-            getView<TextView>(R.id.tvTitle)?.layoutParams as ConstraintLayout.LayoutParams
+        val tvTitle = getView<TextView>(R.id.tvTitle)
+        val layoutParams = tvTitle?.layoutParams as ConstraintLayout.LayoutParams
+        layoutParams.startToEnd = ConstraintLayout.LayoutParams.UNSET
         layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
         layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-        layoutParams.startToEnd = ConstraintLayout.NO_ID
         layoutParams.marginStart = 0
     }
+
+
+    fun showTitle() {
+        titleView?.visibility = View.VISIBLE
+    }
+
+    fun hideTitle() {
+        titleView?.visibility = View.GONE
+    }
+
 }

@@ -7,15 +7,4 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actionMenuTextColor">@color/textColorPrimary</item>
     </style>
-
-    <style name="ZyTitleBar">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">?attr/actionBarSize</item>
-    </style>
-
-    <style name="ZyTitle">
-        <item name="android:textColor">@color/textColorPrimary</item>
-        <item name="android:textSize">@dimen/dp_18</item>
-    </style>
-
 </resources>
