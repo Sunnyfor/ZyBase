@@ -3,7 +3,6 @@ package com.sunny.zy.base
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -11,20 +10,20 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
-import android.widget.ImageView
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
-import com.sunny.zy.listener.OnClickIntervalListener
 import com.sunny.kit.utils.DensityUtil
 import com.sunny.zy.R
 import com.sunny.zy.base.bean.PlaceholderBean
 import com.sunny.zy.base.manager.ActivityManager
 import com.sunny.zy.config.ZyBaseConfig
+import com.sunny.zy.listener.OnClickIntervalListener
 import com.sunny.zy.widget.DefaultStateView
 import com.sunny.zy.widget.ZyToolBar
 
@@ -56,8 +55,8 @@ abstract class BaseActivity : AppCompatActivity(),
         }
     }
 
-    private val ivTopBg: ImageView by lazy {
-        getView(R.id.ivTopBg)
+    private val vTopBg: View by lazy {
+        getView(R.id.vTopBg)
     }
 
     open val toolbar: ZyToolBar by lazy {
@@ -181,36 +180,47 @@ abstract class BaseActivity : AppCompatActivity(),
     /**
      * 设置沉浸式背景
      */
-    fun setImmersionResource(@DrawableRes @ColorRes drawable: Int, height: Int = 0) {
-        immersionBgSetting(height)
-        ivTopBg.setImageResource(drawable)
+    fun setImmersionResource(@DrawableRes res: Int, height: Int = 0) {
+        immersionBgSetting(height) {
+            vTopBg.setBackgroundResource(res)
+        }
+
     }
 
     fun setImmersionColor(@ColorInt color: Int, height: Int = 0) {
-        immersionBgSetting(height)
-        ivTopBg.setImageDrawable(ColorDrawable(color))
+        immersionBgSetting(height) {
+            vTopBg.setBackgroundColor(color)
+        }
     }
 
     /**
      * 设置沉浸式背景
      */
     fun setImmersionBitmap(bitmap: Bitmap, height: Int = 0) {
-        immersionBgSetting(height)
-        ivTopBg.setImageBitmap(bitmap)
+        immersionBgSetting(height) {
+            vTopBg.background = bitmap.toDrawable(resources)
+        }
     }
 
-    private fun immersionBgSetting(height: Int) {
+    /**
+     * 计算沉浸式背景高度
+     */
+    private fun immersionBgSetting(height: Int, callback: () -> Unit) {
         statusBar.setBackgroundResource(android.R.color.transparent)
         toolbar.setBackgroundResource(android.R.color.transparent)
-        if (height == 0) {
-            var toolbarHeight = 0
-            if (toolbar.visibility == View.VISIBLE) {
-                toolbarHeight = toolbar.toolbarHeight
+        val titleView = toolbar[0]
+        titleView.post {
+            if (height == 0) {
+                var toolbarHeight = 0
+                if (toolbar.visibility == View.VISIBLE) {
+                    toolbarHeight = titleView.height
+                }
+                vTopBg.layoutParams.height =
+                    toolbarHeight + DensityUtil.getStatusBarHeight()
+            } else {
+                vTopBg.layoutParams.height = height
             }
-            ivTopBg.layoutParams.height =
-                toolbarHeight + DensityUtil.getStatusBarHeight()
-        } else {
-            ivTopBg.layoutParams.height = height
+            callback.invoke()
         }
     }
 
@@ -243,6 +253,9 @@ abstract class BaseActivity : AppCompatActivity(),
         statusBar.visibility = View.GONE
     }
 
+    /**
+     * 显示输入法键盘
+     */
     fun showKeyboard(editText: EditText, delayMillis: Long = 100) {
         editText.postDelayed({
             editText.requestFocus()

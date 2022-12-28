@@ -34,10 +34,6 @@ object ZyBaseConfig {
      */
     var toolbarPadding = ZyKit.getContext().resources.getDimensionPixelOffset(R.dimen.dp_10)
 
-    /**
-     * 标题栏高度高度 0为默认
-     */
-    var toolBarHeight = DensityUtil.getToolBarHeight()
 
     /**
      * 标题栏文字大小

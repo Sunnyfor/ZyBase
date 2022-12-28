@@ -20,7 +20,6 @@ class ZyToolBar : FrameLayout {
     private var defaultRes = R.layout.zy_layout_title
     private var layoutRes = 0
     private var titleView: View? = null
-    var toolbarHeight = 0 //设置标题栏高度
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -104,11 +103,7 @@ class ZyToolBar : FrameLayout {
             }
         }
         getView<ZyMenuView>(R.id.zvRight)?.setMenu(rightMenu)
-        if (toolbarHeight == 0) {
-            toolbarHeight = ZyBaseConfig.toolBarHeight
-        }
-        val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, toolbarHeight)
-        addView(titleView, layoutParams)
+        addView(titleView)
     }
 
     fun setTitleSimple(title: String, vararg menuItem: MenuBean) {
@@ -172,7 +167,6 @@ class ZyToolBar : FrameLayout {
         layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
         layoutParams.marginStart = 0
     }
-
 
     fun showTitle() {
         titleView?.visibility = View.VISIBLE
