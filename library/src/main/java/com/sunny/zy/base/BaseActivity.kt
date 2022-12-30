@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -88,11 +89,13 @@ abstract class BaseActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         this.savedInstanceState = savedInstanceState
         requestedOrientation = screenOrientation //强制屏幕
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            window.attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        }
         setContentView(R.layout.zy_activity_base)
         statusBar.setBackgroundResource(mStatusBarColor)
         toolbar.setBackgroundResource(mStatusBarColor)
         statusBar.layoutParams.height = DensityUtil.getStatusBarHeight()
-
         when (val layoutView = initLayout()) {
             is Int -> {
                 if (layoutView != 0) {
@@ -239,8 +242,7 @@ abstract class BaseActivity : AppCompatActivity(),
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
             }
         } else {
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         }
     }
 
