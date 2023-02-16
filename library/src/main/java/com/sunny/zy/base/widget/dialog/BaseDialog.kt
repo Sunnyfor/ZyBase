@@ -85,16 +85,12 @@ abstract class BaseDialog(context: Context) : Dialog(context), IBaseView, View.O
 
 
     /**
-     * 批量注册点击事件
+     * 注册点击事件
      * @param views 注册事件的View
      */
     fun setOnClickListener(vararg views: View) {
-        setOnClickListener(this, *views)
-    }
-
-    fun setOnClickListener(onClick: View.OnClickListener, vararg views: View) {
         views.forEach {
-            it.setOnClickListener(onClick)
+            it.setOnClickListener(this)
         }
     }
 
