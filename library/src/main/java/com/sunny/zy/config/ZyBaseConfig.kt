@@ -29,19 +29,10 @@ object ZyBaseConfig {
      */
     var createStateView: ICreateStateView = DefaultCreateStateView()
 
-    /**
-     * 设置标题栏左右填充距离（包含默认标题与左边菜单的距离）
-     */
-    var toolbarPadding = ZyKit.getContext().resources.getDimensionPixelOffset(R.dimen.dp_10)
-
 
     /**
      * 标题栏文字大小
      */
     var toolbarTextSize = ZyKit.getContext().resources.getDimension(R.dimen.dp_18)
 
-    /**
-     * 获取Application
-     */
-    fun getContext() = ZyKit.getContext()
 }

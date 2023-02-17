@@ -38,7 +38,6 @@ class ZyToolBar : FrameLayout {
     private fun initTitleView() {
         removeAllViews()
         titleView = LayoutInflater.from(context).inflate(layoutRes, this, false)
-        setPadding(ZyBaseConfig.toolbarPadding, ZyBaseConfig.toolbarPadding)
     }
 
     fun setLeftPadding(left: Int) {
@@ -150,13 +149,6 @@ class ZyToolBar : FrameLayout {
         layoutParams.startToStart = ConstraintLayout.LayoutParams.UNSET
         layoutParams.endToEnd = ConstraintLayout.LayoutParams.UNSET
         layoutParams.startToEnd = R.id.zvLeft
-        val visibility = getView<View>(R.id.zvLeft)?.visibility
-
-        if (visibility == View.VISIBLE) {
-            layoutParams.marginStart = ZyBaseConfig.toolbarPadding
-        } else {
-            layoutParams.marginStart = 0
-        }
     }
 
     fun centerTitle() {

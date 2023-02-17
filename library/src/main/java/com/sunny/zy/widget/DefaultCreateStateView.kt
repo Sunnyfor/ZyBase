@@ -24,12 +24,12 @@ open class DefaultCreateStateView : ICreateStateView {
         return View.inflate(context, R.layout.zy_layout_placeholder, null)
     }
 
-    override fun showPlaceholder(errorView: View, bean: PlaceholderBean) {
-        val tvTitle = errorView.findViewById<TextView>(R.id.tvDesc)
+    override fun showPlaceholder(placeholderView: View, bean: PlaceholderBean) {
+        val tvTitle = placeholderView.findViewById<TextView>(R.id.tvDesc)
         tvTitle.text = bean.desc
-        val ivIcon = errorView.findViewById<ImageView>(R.id.ivIcon)
+        val ivIcon = placeholderView.findViewById<ImageView>(R.id.ivIcon)
         if (bean.isGif) {
-            Glide.with(errorView.context)
+            Glide.with(placeholderView.context)
                 .asGif()
                 .load(bean.resId)
                 .into(ivIcon)

@@ -111,7 +111,7 @@ abstract class BaseActivity : AppCompatActivity(),
                     .add(parentView.id, layoutView).commit()
             }
         }
-        setStatusBarModel(false)
+        setStatusBarIsDark(ZyBaseConfig.statusBarIsDark)
         ActivityManager.addActivity(this)
         initView()
         loadData()
@@ -232,7 +232,7 @@ abstract class BaseActivity : AppCompatActivity(),
      *  @param isDark true为黑色 false为白色
      */
     @Suppress("DEPRECATION")
-    fun setStatusBarModel(isDark: Boolean) {
+    fun setStatusBarIsDark(isDark: Boolean) {
         this.isDark = isDark
         window.decorView.systemUiVisibility = if (isDark) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

@@ -48,11 +48,18 @@ object ActivityManager {
      * 关闭或保留指定TaskTag的Activity
      */
     fun optionTagActivity(tagActivity: BaseActivity, option: Int = KILL) {
+        optionTagActivity(tagActivity.taskTag, option)
+    }
+
+    /**
+     * 关闭或保留指定TaskTag的Activity
+     */
+    fun optionTagActivity(taskTag: String, option: Int = KILL) {
         val removeStack = Stack<BaseActivity>()
         activityStack.forEach {
-            var flag = it.taskTag == tagActivity.taskTag
+            var flag = it.taskTag == taskTag
             if (option == KEEP) {
-                flag = it.taskTag != tagActivity.taskTag
+                flag = it.taskTag != taskTag
             }
             if (flag) {
                 removeStack.add(it)
@@ -61,6 +68,7 @@ object ActivityManager {
         }
         activityStack.removeAll(removeStack)
     }
+
 
     /**
      * 关闭所有的Activity

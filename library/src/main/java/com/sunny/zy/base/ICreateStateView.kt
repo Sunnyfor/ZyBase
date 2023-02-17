@@ -15,5 +15,5 @@ interface ICreateStateView {
 
     fun getPlaceholderView(context: Context): View
 
-    fun showPlaceholder(errorView: View, bean: PlaceholderBean)
+    fun showPlaceholder(placeholderView: View, bean: PlaceholderBean)
 }

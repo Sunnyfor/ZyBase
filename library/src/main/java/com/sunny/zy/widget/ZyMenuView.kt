@@ -9,9 +9,10 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.sunny.zy.listener.OnClickIntervalListener
+import androidx.core.view.setPadding
 import com.sunny.zy.R
 import com.sunny.zy.base.bean.MenuBean
+import com.sunny.zy.listener.OnClickIntervalListener
 
 class ZyMenuView : LinearLayout {
     constructor(context: Context) : super(context)
@@ -25,6 +26,7 @@ class ZyMenuView : LinearLayout {
 
     init {
         orientation = HORIZONTAL
+        gravity = Gravity.CENTER_VERTICAL
     }
 
     fun setMenu(menu: MenuBean) {
@@ -35,6 +37,7 @@ class ZyMenuView : LinearLayout {
         removeAllViews()
         menus.forEach {
             val llRoot = LinearLayout(context)
+            llRoot.setPadding(resources.getDimensionPixelOffset(R.dimen.dp_10))
             llRoot.orientation = it.orientation
             llRoot.gravity = Gravity.CENTER
             when (it.showType) {
@@ -59,10 +62,6 @@ class ZyMenuView : LinearLayout {
             if (llRoot.childCount > 0) {
                 val layoutParams =
                     LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
-                if (childCount > 0) {
-                    val interval = if (it.interval == 0) MenuBean.INTERVAL else it.interval
-                    layoutParams.marginStart = interval
-                }
                 addView(llRoot, layoutParams)
             }
         }
@@ -93,11 +92,7 @@ class ZyMenuView : LinearLayout {
         val layoutParams =
             LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         val textMargin = if (bean.textMargin == 0) MenuBean.TEXT_MARGIN else bean.textMargin
-        if (bean.orientation == MenuBean.VERTICAL) {
-            layoutParams.topMargin = textMargin
-        } else {
-            layoutParams.marginStart = textMargin
-        }
+
         if (bean.iconWidth > 0) {
             layoutParams.width = bean.iconWidth
         }
@@ -105,19 +100,15 @@ class ZyMenuView : LinearLayout {
             layoutParams.height = bean.iconHeight
         }
         val ivIcon = ImageView(context)
-        if (bean.iconWidth > 0) {
-            ivIcon.maxWidth = bean.iconWidth
-        }
-        if (bean.iconHeight > 0) {
-            ivIcon.maxHeight = bean.iconHeight
-        }
         ivIcon.scaleType = ImageView.ScaleType.FIT_XY
         ivIcon.setImageResource(bean.icon)
+        if (bean.showType == MenuBean.SHOW_TYPE_ALL){
+            if (bean.orientation == MenuBean.VERTICAL) {
+                layoutParams.bottomMargin = textMargin
+            }else{
+                layoutParams.rightMargin = textMargin
+            }
+        }
         rootView.addView(ivIcon, layoutParams)
-    }
-
-    //容器强制水平
-    override fun setOrientation(orientation: Int) {
-        super.setOrientation(HORIZONTAL)
     }
 }

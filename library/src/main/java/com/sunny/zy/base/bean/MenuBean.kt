@@ -33,8 +33,17 @@ class MenuBean {
 
 
     constructor()
+    constructor(icon: Int, onClickListener: View.OnClickListener?) {
+        this.icon = icon
+        this.onClickListener = onClickListener
+    }
 
-    constructor(title: String, icon: Int = 0, onClickListener: View.OnClickListener?) {
+    constructor(title: String, onClickListener: View.OnClickListener?) {
+        this.title = title
+        this.onClickListener = onClickListener
+    }
+
+    constructor(title: String = "", icon: Int = 0, onClickListener: View.OnClickListener?) {
         this.title = title
         this.icon = icon
         this.onClickListener = onClickListener
@@ -76,10 +85,6 @@ class MenuBean {
      */
     var textMargin = 0
 
-    /**
-     * 菜单之间的间隔
-     */
-    var interval = 0
 
     /**
      * 图文排列方向

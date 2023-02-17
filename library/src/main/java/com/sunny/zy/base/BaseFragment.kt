@@ -115,8 +115,8 @@ abstract class BaseFragment : Fragment(), IBaseView, View.OnClickListener {
 
 
 
-    fun setStatusBarTextModel(isDark: Boolean) {
-        getBaseActivity().setStatusBarModel(isDark)
+    fun setStatusBarIsDark(isDark: Boolean) {
+        getBaseActivity().setStatusBarIsDark(isDark)
     }
 
     fun showStatusBar() {
