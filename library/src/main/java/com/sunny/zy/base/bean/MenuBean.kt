@@ -31,19 +31,26 @@ class MenuBean {
         var INTERVAL: Int = ZyKit.getContext().resources.getDimensionPixelSize(R.dimen.dp_6)
     }
 
-
     constructor()
-    constructor(icon: Int, onClickListener: View.OnClickListener?) {
+
+    constructor(@DrawableRes icon: Int, onClickListener: View.OnClickListener) {
         this.icon = icon
         this.onClickListener = onClickListener
     }
 
-    constructor(title: String, onClickListener: View.OnClickListener?) {
+    constructor(title: String, onClickListener: View.OnClickListener) {
         this.title = title
         this.onClickListener = onClickListener
     }
 
-    constructor(title: String = "", icon: Int = 0, onClickListener: View.OnClickListener?) {
+
+    constructor(@DrawableRes icon: Int, title: String, onClickListener: View.OnClickListener) {
+        this.title = title
+        this.icon = icon
+        this.onClickListener = onClickListener
+    }
+
+    constructor(title: String, @DrawableRes icon: Int, onClickListener: View.OnClickListener) {
         this.title = title
         this.icon = icon
         this.onClickListener = onClickListener
